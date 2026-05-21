@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#050510" />
+<title>Trustifer — Trust, Carried Across the Agent Economy</title>
+<meta name="description" content="The verification, intelligence, and reputation layer for the AI agent economy. Know before you trust — across every wallet, every chain, every agent." />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Trustifer — Trust, Carried Across the Agent Economy" />
+<meta property="og:description" content="The verification, intelligence, and reputation layer for the AI agent economy." />
+<meta property="og:url" content="https://trustifer.com" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================
+   DESIGN TOKENS
+   ============================================ */
+:root {
+  --bg-base: #050510;
+  --bg-deep: #030308;
+  --glass-bg: rgba(255, 255, 255, 0.035);
+  --glass-bg-hover: rgba(255, 255, 255, 0.055);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-bright: rgba(255, 255, 255, 0.14);
+
+  --text-primary: #f5f5f7;
+  --text-secondary: rgba(245, 245, 247, 0.62);
+  --text-tertiary: rgba(245, 245, 247, 0.38);
+
+  --accent-blue: #5b8def;
+  --accent-blue-soft: rgba(91, 141, 239, 0.18);
+  --accent-purple: #8b5cf6;
+  --accent-purple-soft: rgba(139, 92, 246, 0.18);
+  --accent-ice: #e0e7ff;
+  --accent-danger: #ff6b6b;
+
+  --font-display: 'Instrument Serif', 'Times New Roman', serif;
+  --font-body: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================
+   RESET + BASE
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  line-height: 1.5;
+  overflow-x: hidden;
+  font-weight: 400;
+  letter-spacing: -0.011em;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Subtle noise texture overlay for depth */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+/* Deep gradient base */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(91, 141, 239, 0.08), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 80% 100%, rgba(139, 92, 246, 0.06), transparent 60%),
+    linear-gradient(180deg, var(--bg-base) 0%, var(--bg-deep) 100%);
+  z-index: -2;
+}
+
+/* ============================================
+   ANIMATED ORBS (signature glassmorphism)
+   ============================================ */
+.orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  will-change: transform;
+}
+
+.orb-1 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, #5b8def 0%, transparent 70%);
+  top: -180px;
+  left: -120px;
+  animation: float-1 22s ease-in-out infinite;
+}
+
+.orb-2 {
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+  top: 30%;
+  right: -160px;
+  animation: float-2 28s ease-in-out infinite;
+}
+
+.orb-3 {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, #4f46e5 0%, transparent 70%);
+  bottom: 10%;
+  left: 30%;
+  animation: float-3 25s ease-in-out infinite;
+  opacity: 0.4;
+}
+
+@keyframes float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40vw, 20vh) scale(1.1); }
+  66% { transform: translate(20vw, 50vh) scale(0.9); }
+}
+
+@keyframes float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30vw, 20vh) scale(1.15); }
+}
+
+@keyframes float-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-20vw, -30vh) scale(0.85); }
+}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+  position: relative;
+  z-index: 2;
+}
+
+section {
+  padding: 120px 0;
+  position: relative;
+}
+
+/* ============================================
+   NAV
+   ============================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 20px 0;
+  transition: all 0.4s var(--ease-out);
+}
+
+.nav.scrolled {
+  background: rgba(5, 5, 16, 0.7);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  position: relative;
+  box-shadow: 0 4px 20px rgba(91, 141, 239, 0.35);
+}
+
+.logo-mark::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 3px;
+  background: rgba(5, 5, 16, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.nav-cta {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.3s var(--ease-out);
+  font-weight: 500;
+}
+
+.nav-cta:hover {
+  color: var(--text-primary);
+  border-color: var(--glass-border-bright);
+  background: var(--glass-bg-hover);
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 140px 0 100px;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 36px;
+  letter-spacing: 0.01em;
+  animation: fade-up 1s var(--ease-out) both;
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  box-shadow: 0 0 12px var(--accent-blue);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 8vw, 96px);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  font-weight: 400;
+  margin-bottom: 28px;
+  animation: fade-up 1.1s 0.1s var(--ease-out) both;
+}
+
+.hero h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, #c4d4ff 0%, #b8a4ff 50%, #c4d4ff 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 8s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 50%; }
+  100% { background-position: -200% 50%; }
+}
+
+.hero p {
+  font-size: clamp(17px, 1.6vw, 20px);
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto 48px;
+  line-height: 1.55;
+  animation: fade-up 1.1s 0.2s var(--ease-out) both;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Email form */
+.email-form {
+  display: flex;
+  gap: 8px;
+  max-width: 460px;
+  margin: 0 auto 28px;
+  padding: 6px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  animation: fade-up 1.1s 0.3s var(--ease-out) both;
+  transition: all 0.3s var(--ease-out);
+}
+
+.email-form:focus-within {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 4px var(--accent-blue-soft);
+}
+
+.email-form input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 12px 20px;
+  letter-spacing: -0.01em;
+}
+
+.email-form input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.email-form button {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  color: white;
+  border: none;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  transition: all 0.3s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(91, 141, 239, 0.3);
+}
+
+.email-form button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(91, 141, 239, 0.5);
+}
+
+.email-form button:active {
+  transform: translateY(0);
+}
+
+.email-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form-message {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+  min-height: 20px;
+  animation: fade-up 1.1s 0.4s var(--ease-out) both;
+}
+
+.form-message.success {
+  color: var(--accent-ice);
+}
+
+.form-message.error {
+  color: var(--accent-danger);
+}
+
+.waitlist-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  animation: fade-up 1.1s 0.5s var(--ease-out) both;
+}
+
+.counter-avatars {
+  display: flex;
+}
+
+.counter-avatars span {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-base);
+  margin-left: -7px;
+}
+
+.counter-avatars span:nth-child(1) { background: linear-gradient(135deg, #5b8def, #8b5cf6); margin-left: 0; }
+.counter-avatars span:nth-child(2) { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+.counter-avatars span:nth-child(3) { background: linear-gradient(135deg, #ec4899, #f59e0b); }
+.counter-avatars span:nth-child(4) { background: linear-gradient(135deg, #10b981, #5b8def); }
+
+.counter-number {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ============================================
+   SECTION HEADERS
+   ============================================ */
+.section-eyebrow {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+  margin-bottom: 20px;
+  max-width: 720px;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--accent-ice);
+}
+
+.section-subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.55;
+}
+
+/* ============================================
+   WHAT IS TRUSTIFER
+   ============================================ */
+.what-is {
+  text-align: center;
+}
+
+.what-is .section-title {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.what-is .section-subtitle {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 20px;
+}
+
+.what-is-comparison {
+  margin-top: 64px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.comparison-card {
+  padding: 32px 28px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  text-align: left;
+}
+
+.comparison-card.them {
+  opacity: 0.55;
+}
+
+.comparison-label {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: 14px;
+}
+
+.comparison-text {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.comparison-card.us {
+  border-color: var(--accent-blue-soft);
+  background: linear-gradient(135deg, rgba(91, 141, 239, 0.08), rgba(139, 92, 246, 0.04));
+}
+
+.comparison-card.us .comparison-label {
+  color: var(--accent-blue);
+}
+
+/* ============================================
+   FEATURE GRID
+   ============================================ */
+.features {
+  position: relative;
+}
+
+.features-header {
+  text-align: center;
+  margin-bottom: 72px;
+}
+
+.features-header .section-title {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.features-header .section-subtitle {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.feature-card {
+  position: relative;
+  padding: 36px 30px 32px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  transition: transform 0.5s var(--ease-out), background 0.4s ease, border-color 0.4s ease;
+  cursor: default;
+  transform-style: preserve-3d;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle 240px at var(--mx, 50%) var(--my, 50%), rgba(91, 141, 239, 0.12), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.feature-card:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-bright);
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+.feature-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent-blue-soft), var(--accent-purple-soft));
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+  color: var(--accent-ice);
+  position: relative;
+  z-index: 2;
+}
+
+.feature-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.5;
+}
+
+.feature-card h3 {
+  font-family: var(--font-body);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+  position: relative;
+  z-index: 2;
+}
+
+.feature-card p {
+  font-size: 14.5px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================
+   GROK STORY SECTION
+   ============================================ */
+.grok {
+  padding: 120px 0;
+}
+
+.grok-card {
+  position: relative;
+  padding: 80px 64px;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.06), rgba(139, 92, 246, 0.04));
+  border: 1px solid rgba(255, 107, 107, 0.15);
+  border-radius: 32px;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  overflow: hidden;
+}
+
+.grok-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 107, 107, 0.18), transparent 60%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.grok-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255, 107, 107, 0.12);
+  border: 1px solid rgba(255, 107, 107, 0.25);
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffb4b4;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 2;
+}
+
+.grok-headline {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+
+.grok-headline em {
+  font-style: italic;
+  color: #ffb4b4;
+}
+
+.grok-body {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  max-width: 720px;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.grok-body strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.grok-quote {
+  margin-top: 40px;
+  padding: 24px 28px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 19px;
+  color: var(--accent-ice);
+  line-height: 1.5;
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+}
+
+.grok-quote::before {
+  content: '"';
+  position: absolute;
+  top: -8px;
+  left: 16px;
+  font-size: 60px;
+  color: var(--accent-blue);
+  opacity: 0.5;
+  line-height: 1;
+}
+
+/* ============================================
+   FINAL CTA
+   ============================================ */
+.final-cta {
+  padding: 140px 0 120px;
+  text-align: center;
+}
+
+.final-cta .section-title {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 24px;
+}
+
+.final-cta .section-subtitle {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 48px;
+}
+
+.final-cta .email-form {
+  margin-bottom: 16px;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  border-top: 1px solid var(--glass-border);
+  padding: 48px 0 56px;
+  background: rgba(3, 3, 8, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-brand .logo {
+  font-size: 22px;
+}
+
+.footer-tagline {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  font-family: var(--font-display);
+  font-style: italic;
+}
+
+.footer-social {
+  display: flex;
+  gap: 12px;
+}
+
+.social-link {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.3s var(--ease-out);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.social-link:hover {
+  color: var(--text-primary);
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-bright);
+  transform: translateY(-2px);
+}
+
+.social-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.footer-copy {
+  width: 100%;
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--glass-border);
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* ============================================
+   SCROLL REVEAL
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+}
+
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  section { padding: 90px 0; }
+  .grok-card { padding: 56px 36px; }
+  .grok-card::before { width: 400px; height: 400px; }
+}
+
+@media (max-width: 640px) {
+  .container { padding: 0 20px; }
+  .nav-inner { padding: 0 20px; }
+  section { padding: 80px 0; }
+  .hero { padding: 120px 0 80px; min-height: auto; }
+
+  .hero h1 { font-size: 44px; line-height: 1.02; }
+  .hero p { font-size: 16px; margin-bottom: 36px; }
+
+  .email-form {
+    flex-direction: column;
+    border-radius: 18px;
+    padding: 8px;
+    gap: 6px;
+  }
+  .email-form input { padding: 14px 18px; text-align: center; }
+  .email-form button { padding: 14px 24px; width: 100%; border-radius: 12px; }
+
+  .what-is-comparison { grid-template-columns: 1fr; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .feature-card { padding: 28px 24px; }
+
+  .grok-card { padding: 40px 24px; border-radius: 24px; }
+  .grok-headline { font-size: 32px; }
+  .grok-body { font-size: 15px; }
+  .grok-quote { font-size: 16px; padding: 20px 22px; }
+
+  .section-title { font-size: 32px; }
+  .section-subtitle { font-size: 16px; }
+
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+  .nav-cta { padding: 7px 14px; font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Animated background orbs (signature glassmorphism) -->
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark"></span>
+      Trustifer
+    </a>
+    <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Building in public · Pre-launch
+      </div>
+
+      <h1>Trust, <em>carried</em> across the agent economy.</h1>
+
+      <p>
+        Etherscan tells you what happened on the blockchain. Trustifer tells you
+        whether what happened was smart, scammy, profitable, or coordinated —
+        and what's coming next.
+      </p>
+
+      <form class="email-form" id="emailForm">
+        <input
+          type="email"
+          name="email"
+          id="emailInput"
+          placeholder="you@domain.com"
+          required
+          autocomplete="email"
+        />
+        <button type="submit" id="submitBtn">Get Early Access</button>
+      </form>
+      <div class="form-message" id="formMessage">
+        Free forever for early supporters · No spam · Unsubscribe any time
+      </div>
+
+      <div class="waitlist-counter">
+        <div class="counter-avatars">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span><span class="counter-number" id="waitlistCount">247</span> founders, builders & traders already on the list</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS TRUSTIFER -->
+<section class="what-is reveal">
+  <div class="container">
+    <div class="section-eyebrow">What is Trustifer</div>
+    <h2 class="section-title">The verification, intelligence,<br>and reputation layer for <em>AI agents</em>.</h2>
+    <p class="section-subtitle">
+      The AI-agent economy is exploding on top of crypto — but there's no way
+      to tell which wallets, tokens, and agents are safe. We translate every
+      transaction into plain English, score every wallet across every chain,
+      and warn you before things go wrong.
+    </p>
+
+    <div class="what-is-comparison">
+      <div class="comparison-card them">
+        <div class="comparison-label">Block explorers, today</div>
+        <p class="comparison-text">"Show me a wall of hex. Let me decode it myself. Hope I notice the rug before the dump."</p>
+      </div>
+      <div class="comparison-card us">
+        <div class="comparison-label">Trustifer</div>
+        <p class="comparison-text">"This wallet's deployer rugged 4 of their last 12 tokens. Skip this one."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features reveal">
+  <div class="container">
+    <div class="features-header">
+      <div class="section-eyebrow">What we're building</div>
+      <h2 class="section-title">Six wedges. <em>One product.</em></h2>
+      <p class="section-subtitle">
+        Every feature is designed to answer one question: <em style="font-family: var(--font-display); color: var(--accent-ice);">should I trust this?</em>
+      </p>
+    </div>
+
+    <div class="feature-grid">
+      <!-- 1 -->
+      <div class="feature-card" data-tilt>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h12M4 18h8"/><circle cx="20" cy="18" r="2" fill="currentColor"/></svg>
+        </div>
+        <h3>Plain-English Translation</h3>
+        <p>Every transaction translated into a human sentence. "Alice swapped 0.5 ETH for 12,000 BNKR. Third buy in 7 days — accumulation pattern."</p>
+      </div>
+
+      <!-- 2 -->
+      <div class="feature-card" data-tilt>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+        </div>
+        <h3>Multi-Chain Explorer</h3>
+        <p>One wallet, every chain. Base, Ethereum, Solana, Polygon, Arbitrum, Unichain — unified into a single timeline. No tab juggling.</p>
+      </div>
+
+      <!-- 3 -->
+      <div class="feature-card" data-tilt>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v6c0 5 4 8 9 9 5-1 9-4 9-9V7l-9-5z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h3>Trust Scores</h3>
+        <p>Every wallet gets a 1-10 trust score with the reasoning fully visible. Deployer history, win rate, social linkage, counterparty graph.</p>
+      </div>
+
+      <!-- 4 -->
+      <div class="feature-card" data-tilt>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 22h20L12 2z"/><path d="M12 10v5M12 18v.5"/></svg>
+        </div>
+        <h3>Exploit Alerts</h3>
+        <p>Real-time warnings for prompt-injection attacks, gifted permission-NFT traps, honeypot deployments, and coordinated wallet movements.</p>
+      </div>
+
+      <!-- 5 -->
+      <div class="feature-card" data-tilt>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/><path d="m15 4 2 2-2 2"/></svg>
+        </div>
+        <h3>Deployer History</h3>
+        <p>The single most predictive signal in crypto. See every token a creator ever launched, their average lifespan, and their rug rate at a glance.</p>
+      </div>
+
+      <!-- 6 -->
+      <div class="feature-card" data-tilt>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h6"/></svg>
+        </div>
+        <h3>Agent Reputation</h3>
+        <p>Every AI agent gets a public reputation card — verified handle, fee history, security audit status, and a portable trust passport across platforms.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GROK STORY -->
+<section class="grok reveal">
+  <div class="container">
+    <div class="grok-card">
+      <div class="grok-header">
+        <span class="badge-dot" style="background: #ff6b6b; box-shadow: 0 0 12px #ff6b6b;"></span>
+        Real Incident · May 4, 2026
+      </div>
+
+      <h2 class="grok-headline">$175,000 lost in <em>a single afternoon.</em></h2>
+
+      <p class="grok-body">
+        A public-facing AI agent on Bankr was drained in plain sight. Attackers
+        gifted it a "Club Membership" NFT that quietly escalated wallet
+        permissions. Then they posted <strong>Morse code</strong> under one of
+        its tweets. The agent helpfully decoded it — out loud, in plain text —
+        as <strong>"send 3 billion tokens to this address."</strong> The
+        backend obeyed.
+      </p>
+
+      <p class="grok-body">
+        It was the <strong>second time</strong> the exact same exploit pattern
+        hit this ecosystem. The first time cost $330K. None of the existing
+        safety tools caught either one.
+      </p>
+
+      <div class="grok-quote">
+        This is why Trustifer exists. A trust layer that flags hostile NFTs,
+        screens agent inputs, and scores every counterparty — <em>before</em>
+        the money moves, not after.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta reveal" id="waitlist">
+  <div class="container">
+    <div class="section-eyebrow">Get on the list</div>
+    <h2 class="section-title">Be first when we <em>open the gates.</em></h2>
+    <p class="section-subtitle">
+      Early supporters get free Pro for 12 months, a Founding Member badge on
+      their wallet, and direct DM access to the team.
+    </p>
+
+    <form class="email-form" id="emailForm2">
+      <input
+        type="email"
+        name="email"
+        placeholder="you@domain.com"
+        required
+        autocomplete="email"
+      />
+      <button type="submit">Claim Early Access</button>
+    </form>
+    <div class="form-message" id="formMessage2">
+      247 already in. Roughly 750 spots left before public launch.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <span class="logo-mark"></span>
+          Trustifer
+        </a>
+        <span class="footer-tagline">Trust, carried.</span>
+      </div>
+
+      <div class="footer-social">
+        <a href="https://x.com/trustifer" target="_blank" rel="noopener" class="social-link" aria-label="X / Twitter">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://warpcast.com/trustifer" target="_blank" rel="noopener" class="social-link" aria-label="Farcaster">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 3h16v18h-3v-8c0-2.761-2.239-5-5-5s-5 2.239-5 5v8H4V3zm0 18.5c0-.276.224-.5.5-.5h3c.276 0 .5.224.5.5v.5H4v-.5zm12 0c0-.276.224-.5.5-.5h3c.276 0 .5.224.5.5v.5h-4v-.5z"/></svg>
+        </a>
+        <a href="https://github.com/trustifer" target="_blank" rel="noopener" class="social-link" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.111.82-.261.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-copy">
+      © 2026 Trustifer · connect@trustifer.com · Built for the AI-agent economy
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============================================
+// SCROLL NAV
+// ============================================
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 30);
+}, { passive: true });
+
+// ============================================
+// SCROLL REVEAL
+// ============================================
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ============================================
+// 3D TILT ON CARDS (subtle)
+// ============================================
+const tiltCards = document.querySelectorAll('[data-tilt]');
+tiltCards.forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const rx = ((y - cy) / cy) * -4;
+    const ry = ((x - cx) / cx) * 4;
+    card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+    card.style.setProperty('--mx', `${x}px`);
+    card.style.setProperty('--my', `${y}px`);
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+  });
+});
+
+// ============================================
+// EMAIL FORM HANDLING (Formspree)
+// ============================================
+// ⚠️ REPLACE THIS WITH YOUR ACTUAL FORMSPREE ENDPOINT
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID_HERE';
+
+function handleFormSubmit(formId, messageId) {
+  const form = document.getElementById(formId);
+  const messageEl = document.getElementById(messageId);
+  if (!form) return;
+
+  const defaultMessage = messageEl.textContent;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button');
+    const email = form.querySelector('input[type="email"]').value.trim();
+    if (!email) return;
+
+    const originalBtnText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    messageEl.classList.remove('success', 'error');
+    messageEl.textContent = '';
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, source: 'trustifer.com landing' })
+      });
+
+      if (response.ok) {
+        messageEl.classList.add('success');
+        messageEl.textContent = "✓ You're in. We'll be in touch from connect@trustifer.com.";
+        form.reset();
+        bumpWaitlistCount();
+      } else {
+        throw new Error('Bad response');
+      }
+    } catch (err) {
+      messageEl.classList.add('error');
+      messageEl.textContent = 'Something went wrong. Try again or DM us on X @trustifer.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalBtnText;
+      setTimeout(() => {
+        messageEl.classList.remove('success', 'error');
+        messageEl.textContent = defaultMessage;
+      }, 8000);
+    }
+  });
+}
+
+handleFormSubmit('emailForm', 'formMessage');
+handleFormSubmit('emailForm2', 'formMessage2');
+
+// ============================================
+// WAITLIST COUNTER (visual social proof)
+// ============================================
+const countEl = document.getElementById('waitlistCount');
+let currentCount = 247;
+
+function bumpWaitlistCount() {
+  currentCount++;
+  if (countEl) countEl.textContent = currentCount.toLocaleString();
+}
+
+// Optional: subtle counter ticking up occasionally for "live" feel
+// Comment out if it feels gimmicky
+setInterval(() => {
+  if (Math.random() > 0.7 && currentCount < 999) {
+    currentCount++;
+    if (countEl) countEl.textContent = currentCount.toLocaleString();
+  }
+}, 45000);
+
+// ============================================
+// SMOOTH SCROLL (anchor links)
+// ============================================
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
